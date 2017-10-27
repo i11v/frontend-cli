@@ -8,7 +8,7 @@ const chalk = require('chalk');
 const { stripIndent } = require('common-tags');
 
 const pkg = require('../package.json');
-
+const packageJson = require(path.resolve(process.cwd(), 'package.json'))
 let componentName;
 
 const command = new commander.Command('create-component')
@@ -21,6 +21,15 @@ const command = new commander.Command('create-component')
   .option('-F, --functional', 'Created functional component', false)
   .option('--no-css', 'Component w/o styles', false)
   .parse(process.argv);
+
+if (packageJson['frontend-cli'] === undefined) {
+  console.error('Could not parse frontend-cli config');
+  console.log();
+  console.log('Add config to your package.json');
+  process.exit(1);
+}
+
+const config = packageJson['frontend-cli'];
 
 if (componentName === undefined) {
   console.error('Please specify component name');
@@ -40,7 +49,7 @@ if (componentName === undefined) {
 createComponent(componentName, command.functional, command.noCSS);
 
 function createComponent(name, functional, noCSS) {
-  const root = path.resolve(name);
+  const root = path.resolve(config.components, componentName);
 
   fs.ensureDirSync(root);
 
