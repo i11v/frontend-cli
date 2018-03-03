@@ -8,7 +8,7 @@ const chalk = require('chalk');
 const { stripIndent } = require('common-tags');
 
 const pkg = require('../package.json');
-const packageJson = require(path.resolve(process.cwd(), 'package.json'))
+const packageJson = require(path.resolve(process.cwd(), 'package.json'));
 let componentName;
 
 const command = new commander.Command('create-component')
@@ -59,7 +59,7 @@ function createComponent(name, functional, noCSS) {
 
   fs.writeFileSync(
     path.join(root, 'package.json'),
-    JSON.stringify(packageJson, null, 2)
+    `${JSON.stringify(packageJson, null, 2)}\n`
   );
 
   let cssImport;
@@ -69,7 +69,7 @@ function createComponent(name, functional, noCSS) {
 
     fs.writeFileSync(
       path.join(root, cssFileName),
-      `.container {}`
+      `.container {}\n`
     );
     cssImport = `import styles from './${cssFileName}';`;
   }
@@ -91,7 +91,7 @@ function createComponent(name, functional, noCSS) {
 
       export default ${name};`;
 
-    fs.writeFileSync(path.join(root, `${name}.jsx`), componentTmpl);
+    fs.writeFileSync(path.join(root, `${name}.jsx`), `${componentTmpl}\n`);
   } else {
     const componentTmpl = stripIndent`
       import React, { Component } from 'react';
@@ -102,6 +102,8 @@ function createComponent(name, functional, noCSS) {
         static propTypes = {};
 
         static defaultProps = {};
+
+        state = {};
 
         render() {
           return (
@@ -114,7 +116,7 @@ function createComponent(name, functional, noCSS) {
 
       export default ${name};`;
 
-    fs.writeFileSync(path.join(root, `${name}.jsx`), componentTmpl);
+    fs.writeFileSync(path.join(root, `${name}.jsx`), `${componentTmpl}\n`);
   }
 
   console.log(chalk.green(`Component ${name} successfully created`))
